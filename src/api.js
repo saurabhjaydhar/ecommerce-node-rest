@@ -9,10 +9,22 @@ const router = express.Router();
 const authRouter = require('../routes/auth-route');
 const productRouter = require('../routes/products-route');
 const cartRouter = require('../routes/cart-route');
-
-connectDB();
+const mongoose = require('mongoose');
+// connectDB();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+mongoose
+  .connect(
+    'mongodb+srv://saurabh:qwerty1234@cluster0.1cm0jr7.mongodb.net/auth?retryWrites=true&w=majority',
+    { keepAlive: true, keepAliveInitialDelay: 300000 },
+  )
+  .then((value) => {
+    console.log(`mongoose connection done | ${value}`);
+  })
+  .catch((error) => {
+    console.log(`mongoose connection failed | ${error}`);
+  });
 
 // app.use('/api', authRouter);
 // app.use('/api/products', productRouter);

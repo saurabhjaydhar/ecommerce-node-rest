@@ -88,7 +88,7 @@ const getAllProduct = async (req, res) => {
   //     token,
   //     'SXqrqphaiLc92_sibuxhsEPvtjQlUx_WwMxdjZ7qp-odX3kAUbZi-H4ZvazieO2D',
   //   );
-  console.log('req', req);
+  // console.log('req', req);
   // }
 
   // const existProduct =
