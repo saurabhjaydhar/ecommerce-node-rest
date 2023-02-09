@@ -91,12 +91,13 @@ const getAllProduct = async (req, res) => {
   console.log('req', req);
   // }
 
-  const existProduct = await ProductModel.find()
+  // const existProduct =
+  await ProductModel.find()
     .then((val) => {
-      res.status(200).json({ message: 'sucessfull', productData: val });
+      return res.status(200).json({ message: 'sucessfull', productData: val });
     })
     .catch((error) => {
-      res.status(400).json({ message: 'No Product available' });
+      return res.status(400).json({ message: 'No Product available' });
     });
 
   // console.log('existProduct', existProduct);
