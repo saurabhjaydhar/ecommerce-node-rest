@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = () => {
   mongoose
     .connect(
-      'mongodb+srv://saurabh:qwerty1234@cluster0.1cm0jr7.mongodb.net/?retryWrites=true&w=majority',
+      'mongodb+srv://saurabh:qwerty1234@cluster0.1cm0jr7.mongodb.net/auth?retryWrites=true&w=majority',
     )
     .then((value) => {
       console.log(`mongoose connection done | ${value}`);
