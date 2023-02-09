@@ -92,7 +92,7 @@ const getAllProduct = async (req, res) => {
   // }
 
   // const existProduct =
-  await ProductModel.find()
+  return await ProductModel.find()
     .then((val) => {
       // console.log(pr)
       return res.status(200).json({ message: 'sucessfull', productData: [] });
