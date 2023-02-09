@@ -5,15 +5,15 @@ const user = require('../model/user-model');
 
 const createProduct = async (req, res) => {
   console.log(`product data|${res}`);
-  const { title, description, salePrice, actualPrice, tags } = req.body;
+  const { name, description, price, discountPrice, category } = req.body;
 
-  if (title == '') {
+  if (name == '') {
     return res.status(400).json({ message: 'Please enter required details.' });
   }
   const productLength = await ProductModel.count();
   console.log('productLength', productLength);
 
-  const existProduct = await ProductModel.findOne({ title: title });
+  const existProduct = await ProductModel.findOne({ name: name });
   if (existProduct) {
     // console.log('checkexistProduct', existProduct);
     return res.status(300).json({ message: 'Product is already avaialble' });
@@ -21,11 +21,11 @@ const createProduct = async (req, res) => {
 
   const create = await ProductModel.create({
     // productId: create._id,
-    title: title,
+    name: name,
     description: description,
-    salePrice: salePrice,
-    actualPrice: actualPrice,
-    tags: tags,
+    price: price,
+    discountPrice: discountPrice,
+    category: category,
   });
   console.log(create);
 
@@ -33,11 +33,11 @@ const createProduct = async (req, res) => {
     res.status(200).json({
       message: 'Product created successfully ',
       productDetails: {
-        title: title,
+        name: name,
         description: description,
-        salePrice: salePrice,
-        actualPrice: actualPrice,
-        tags: tags,
+        price: price,
+        discountPrice: discountPrice,
+        category: category,
         // productId: create._id,
       },
     });
