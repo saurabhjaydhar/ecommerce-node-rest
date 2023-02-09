@@ -14,9 +14,9 @@ connectDB();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/', authRouter);
-app.use('/', productRouter);
-app.use('/', cartRouter);
+// app.use('/', authRouter);
+// app.use('/', productRouter);
+// app.use('/', cartRouter);
 
 router.get('/', (req, res) => {
   res.json({
