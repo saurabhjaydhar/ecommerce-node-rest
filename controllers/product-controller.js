@@ -92,14 +92,15 @@ const getAllProduct = async (req, res) => {
   // }
 
   // const existProduct =
-  return await ProductModel.find()
-    .then((val) => {
-      // console.log(pr)
-      return res.status(200).json({ message: 'sucessfull', productData: [] });
-    })
-    .catch((error) => {
-      return res.status(400).json({ message: 'No Product available' });
-    });
+  await ProductModel.find();
+  return res.status(400).json({ message: 'No Product available' });
+  // .then((val) => {
+  //   // console.log(pr)
+  //   return res.status(200).json({ message: 'sucessfull', productData: [] });
+  // })
+  // .catch((error) => {
+  //  ;
+  // });
 
   // console.log('existProduct', existProduct);
 };
