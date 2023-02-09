@@ -239,20 +239,19 @@ const extractToken = (req) => {
 };
 
 const sendOTP = () => {
-  const accountSid = 'AC6ab4f69802d4106531c36cdde1429208';
-  const authToken = '7a30955e3311e69f302f1922cd9164f2';
-  const client = require('twilio')(accountSid, authToken);
-  console.log('checkauth');
-
-  const otp = generateOTP();
-  client.messages
-    .create({
-      body: `This is a demo message. Your verification code is ${otp}`,
-      from: '+19788177922',
-      to: '+918476815968',
-    })
-    .then((message) => console.log(message.sid));
-  console.log('checkauth 2');
+  // const accountSid = 'AC6ab4f69802d4106531c36cdde1429208';
+  // const authToken = '7a30955e3311e69f302f1922cd9164f2';
+  // const client = require('twilio')(accountSid, authToken);
+  // console.log('checkauth');
+  // const otp = generateOTP();
+  // client.messages
+  //   .create({
+  //     body: `This is a demo message. Your verification code is ${otp}`,
+  //     from: '+19788177922',
+  //     to: '+918476815968',
+  //   })
+  //   .then((message) => console.log(message.sid));
+  // console.log('checkauth 2');
 };
 
 const generateOTP = () => {
