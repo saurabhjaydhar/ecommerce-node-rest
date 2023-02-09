@@ -94,7 +94,8 @@ const getAllProduct = async (req, res) => {
   // const existProduct =
   await ProductModel.find()
     .then((val) => {
-      return res.status(200).json({ message: 'sucessfull', productData: val });
+      // console.log(pr)
+      return res.status(200).json({ message: 'sucessfull', productData: [] });
     })
     .catch((error) => {
       return res.status(400).json({ message: 'No Product available' });
