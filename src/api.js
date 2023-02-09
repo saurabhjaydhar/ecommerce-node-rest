@@ -14,9 +14,9 @@ connectDB();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/auth', authRouter);
-app.use('/api/products', productRouter);
-app.use('/api/cart', cartRouter);
+app.use('/', authRouter);
+app.use('/', productRouter);
+app.use('/', cartRouter);
 
 router.get('/', (req, res) => {
   res.json({
@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
 app.use(`/.netlify/functions/api`, router);
 app.use(`/.netlify/functions/api/cart`, cartRouter);
 app.use(`/.netlify/functions/api/products`, productRouter);
-app.use(`/.netlify/functions/api/auth`, authRouter);
+app.use(`/.netlify/functions//api/auth`, authRouter);
 
 // app.listen(process.env.PORT, () => {
 //   console.log(
