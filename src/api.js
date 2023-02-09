@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', authRouter);
-app.use('/api/products', productRouter);
+app.use('/', productRouter);
 app.use('/', cartRouter);
 
 router.get('/', (req, res) => {
