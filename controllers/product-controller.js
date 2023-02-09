@@ -92,7 +92,7 @@ const getAllProduct = async (req, res) => {
   // }
 
   // const existProduct =
-  await ProductModel.find();
+  await ProductModel.findOne({ name: 'ok' }).lean();
   return res.status(400).json({ message: 'No Product available' });
   // .then((val) => {
   //   // console.log(pr)
