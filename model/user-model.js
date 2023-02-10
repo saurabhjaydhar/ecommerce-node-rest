@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  role: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -25,11 +29,11 @@ const userSchema = new mongoose.Schema({
     required: false,
     default: '',
   },
-  address: {
-    type: [addressSchema.schema],
-    required: false,
-    default: [addressSchema],
-  },
+  // address: {
+  //   type: [addressSchema.schema],
+  //   required: false,
+  //   default: [addressSchema],
+  // },
   createdAt: {
     type: Date,
     default: Date.now,
