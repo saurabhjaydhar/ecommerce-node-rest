@@ -7,8 +7,9 @@ const { jwtSign, jwtVerify } = require('../services/user_service');
 
 const register = async (req, res) => {
   const schema = Joi.object({
-    email: Joi.string().email().required(),
+    role: Joi.string().required(),
     name: Joi.string().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
   });
   const { error, value } = schema.validate(req.body);
@@ -31,6 +32,7 @@ const register = async (req, res) => {
     });
   } else {
     await UserModel.create({
+      role: value.role,
       name: value.name,
       email: value.email,
       password: hashedPassword,
@@ -42,11 +44,8 @@ const register = async (req, res) => {
 
         userData.token = token;
 
-        // let jsondata = userData;
         var jsondata = JSON.parse(JSON.stringify(userData));
         delete jsondata.password;
-
-        // console.log('checkuser|', jsondata);
 
         if (jsondata) {
           res.status(201).send({
