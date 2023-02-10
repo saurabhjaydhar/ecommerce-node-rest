@@ -91,8 +91,7 @@ const getAllProduct = async (req, res) => {
   // console.log('req', req);
   // }
 
-  // const existProduct =
-  // await ProductModel.findOne({ name: 'ok' });
+  const existProduct = await ProductModel.findOne({ name: 'ok' });
   return res.status(400).json({ message: 'No Product available' });
   // .then((val) => {
   //   // console.log(pr)
