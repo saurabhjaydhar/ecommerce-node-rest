@@ -94,7 +94,7 @@ const login = async (req, res) => {
 
   const user = await UserModel.findOne({
     email: value.email,
-    role: value.name,
+    role: value.role,
     // password: hashedPassword,
   })
     .then(async (userData) => {
