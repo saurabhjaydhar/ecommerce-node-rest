@@ -23,6 +23,7 @@ const register = async (req, res) => {
 
   const existingUser = await UserModel.findOne({
     email: value.email,
+    role: value.role,
   });
 
   if (existingUser) {
@@ -94,7 +95,7 @@ const login = async (req, res) => {
 
   const user = await UserModel.findOne({
     email: value.email,
-    role: value.role,
+
     // password: hashedPassword,
   })
     .then(async (userData) => {
@@ -103,9 +104,20 @@ const login = async (req, res) => {
         const userId = userData._id;
         const email = userData.email;
         // console.log('checkuser 0', userData);
+
+        const isRole = value.role == userData.role;
+        //  role: value.role,
+
+        if (!isRole) {
+          return res.status(401).send({
+            message: "Can't login with this role",
+            data: error,
+          });
+        }
         const token = jwtSign(userId, email);
 
         userData.token = token;
+
         // userData.
         // delete userData.password;
         // var jsondata = userData;
@@ -127,12 +139,12 @@ const login = async (req, res) => {
 
           // console.log('checkuser|', jsondata);
 
-          res.status(201).send({
+          return res.status(201).json({
             message: 'Logged in successfully',
             data: jsondata,
           });
         } else {
-          return res.status(401).send({
+          return res.status(401).json({
             message: 'Wrong Password!',
             data: error,
           });
@@ -152,8 +164,8 @@ const login = async (req, res) => {
         //   });
         // }
       } else {
-        res.status(401).send({
-          message: 'Email not found Credential',
+        return res.status(401).json({
+          message: 'Email not found ',
           data: error,
         });
       }
