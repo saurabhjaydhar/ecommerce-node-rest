@@ -80,7 +80,7 @@ const comparePassword = async (plaintextPassword, hash) => {
 const login = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    name: Joi.string().required(),
+    role: Joi.string().required(),
     password: Joi.string().required(),
   });
   const { error, value } = schema.validate(req.body);
@@ -94,7 +94,7 @@ const login = async (req, res) => {
 
   const user = await UserModel.findOne({
     email: value.email,
-    name: value.name,
+    role: value.name,
     // password: hashedPassword,
   })
     .then(async (userData) => {
