@@ -174,7 +174,7 @@ const changePassword = async (req, res) => {
   // const { email, id } = req;
   // const { password } = req.body;
 
-  const user = await UserModel.findOne({ email: value.email }).lean();
+  const user = await UserModel.findOne({ email: value.email });
   // console.log(user);
 
   if (user) {
