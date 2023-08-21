@@ -1,16 +1,14 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const UserModel = require('../model/user-model');
-const Joi = require('joi');
-const l = require('lodash');
-const { jwtSign, jwtVerify } = require('../services/user_service');
+import { genSalt, hash } from "bcryptjs";
+import { findOne, create, findByIdAndUpdate, findById } from "../model/user-model";
+import { object, string } from "joi";
+import { jwtSign, jwtVerify, extractToken, verifyToken, comparePassword } from "../services/auth-service";
 
 const register = async (req, res) => {
-  const schema = Joi.object({
-    role: Joi.string().required(),
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+  const schema = object({
+    role: string().required(),
+    name: string().required(),
+    email: string().email().required(),
+    password: string().required(),
   });
   const { error, value } = schema.validate(req.body);
   if (error) {
@@ -18,21 +16,21 @@ const register = async (req, res) => {
     return;
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(value.password, salt);
+  const salt = await genSalt(10);
+  const hashedPassword = await hash(value.password, salt);
 
-  const existingUser = await UserModel.findOne({
+  const existingUser = await findOne({
     email: value.email,
     role: value.role,
   });
 
   if (existingUser) {
     res.status(400).json({
-      message: 'Already registered',
+      message: "Already registered",
       data: {},
     });
   } else {
-    await UserModel.create({
+    await create({
       role: value.role,
       name: value.name,
       email: value.email,
@@ -50,39 +48,30 @@ const register = async (req, res) => {
 
         if (jsondata) {
           res.status(201).send({
-            message: 'Registered successfully',
+            message: "Registered successfully",
             data: jsondata,
           });
         } else {
           res.status(401).send({
-            message: 'Something went wrong',
+            message: "Something went wrong",
             data: error,
           });
         }
       })
       .catch((error) => {
         res.status(401).send({
-          message: 'Something went wrong',
+          message: "Something went wrong",
           data: error,
         });
       });
   }
 };
-const comparePassword = async (plaintextPassword, hash) => {
-  return await bcrypt
-    .compare(plaintextPassword, hash)
-    .then((result) => {
-      return result;
-    })
-    .catch((err) => {
-      // console.log(err);
-    });
-};
+
 const login = async (req, res) => {
-  const schema = Joi.object({
-    email: Joi.string().email().required(),
-    role: Joi.string().required(),
-    password: Joi.string().required(),
+  const schema = object({
+    email: string().email().required(),
+    role: string().required(),
+    password: string().required(),
   });
   const { error, value } = schema.validate(req.body);
   if (error) {
@@ -90,13 +79,13 @@ const login = async (req, res) => {
     return;
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(value.password, salt);
+  const salt = await genSalt(10);
+  const hashedPassword = await hash(value.password, salt);
 
-  const user = await UserModel.findOne({
+  const user = await findOne({
     email: value.email,
 
-    // password: hashedPassword,
+    password: hashedPassword,
   })
     .then(async (userData) => {
       if (userData) {
@@ -125,7 +114,7 @@ const login = async (req, res) => {
         // console.log('hceonloginonly 1', userData);
         var isCorrectPassword = await comparePassword(
           value.password,
-          userData.password,
+          userData.password
           // '$2a$10$5eIRk4ADDRNOyEOjTRtsbujTfq66xsxW7RPy9BwKibc3AoCJFfGm3m',
           // '$2a$10$KPhCfJNA4Ebp9zRlmuYIs.F3D4Yjal9snC2zftcGG9bl5S4cErCNu',
         );
@@ -140,12 +129,12 @@ const login = async (req, res) => {
           // console.log('checkuser|', jsondata);
 
           return res.status(201).json({
-            message: 'Logged in successfully',
+            message: "Logged in successfully",
             data: jsondata,
           });
         } else {
           return res.status(401).json({
-            message: 'Wrong Password!',
+            message: "Wrong Password!",
             data: error,
           });
         }
@@ -165,7 +154,7 @@ const login = async (req, res) => {
         // }
       } else {
         return res.status(401).json({
-          message: 'Email not found ',
+          message: "Email not found ",
           data: error,
         });
       }
@@ -174,9 +163,9 @@ const login = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-  const schema = Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+  const schema = object({
+    email: string().email().required(),
+    password: string().required(),
   });
   const { error, value } = schema.validate(req.body);
   if (error) {
@@ -186,67 +175,30 @@ const changePassword = async (req, res) => {
   // const { email, id } = req;
   // const { password } = req.body;
 
-  const user = await UserModel.findOne({ email: value.email });
+  const user = await findOne({ email: value.email });
   // console.log(user);
 
   if (user) {
     if (value.password == user.password) {
       return res.status(400).json({
-        message: 'Old and new pasassword are same',
+        message: "Old and new pasassword are same",
       });
     }
-    await UserModel.findByIdAndUpdate(
+    await findByIdAndUpdate(
       { _id: user._id },
       {
         $set: {
           password: value.password,
         },
-      },
+      }
     );
-    const updatedUser = await UserModel.findById({ _id: user._id });
+    const updatedUser = await findById({ _id: user._id });
     res
       .status(200)
-      .json({ message: 'Password updated successfully', data: updatedUser });
+      .json({ message: "Password updated successfully", data: updatedUser });
   } else {
-    res.status(400).json({ message: 'User not found' });
+    res.status(400).json({ message: "User not found" });
   }
-};
-
-const verifyToken = (req, res, next) => {
-  const token = extractToken(req);
-  // console.log(token);
-
-  if (token) {
-    try {
-      const decodeToken = jwtVerify(token);
-      // jwt.verify(
-      //   token,
-      //   'SXqrqphaiLc92_sibuxhsEPvtjQlUx_WwMxdjZ7qp-odX3kAUbZi-H4ZvazieO2D',
-      // );
-      // console.log('geusert', decodeToken);
-
-      const email = decodeToken.email;
-      const id = decodeToken.user_id;
-      req.email = email;
-      req.userId = id;
-      next();
-    } catch (error) {
-      res.status(400).json({ message: 'Authorization error' });
-    }
-  } else {
-    res.status(400).json({ message: 'Authorization error' });
-  }
-};
-const extractToken = (req) => {
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.split(' ')[0] === 'Bearer'
-  ) {
-    return req.headers.authorization.split(' ')[1];
-  } else if (req.query && req.query.token) {
-    return req.query.token;
-  }
-  return null;
 };
 
 const sendOTP = () => {
@@ -269,12 +221,10 @@ const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000);
 };
 
-module.exports = {
+export default {
   login,
   register,
-  verifyToken,
   changePassword,
-  extractToken,
   sendOTP,
   // updateUserProfile,
 };

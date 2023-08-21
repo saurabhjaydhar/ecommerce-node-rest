@@ -1,7 +1,7 @@
 const multer = require('multer');
 const fs = require('fs');
 const userModel = require('../model/user-model');
-const { extractToken } = require('./auth-controller');
+const { extractToken } = require('./auth-controller').default;
 
 // / SET STORAGE
 var storage = multer.diskStorage({

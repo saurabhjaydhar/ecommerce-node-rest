@@ -6,7 +6,7 @@ const {
   verifyToken,
   uploadImage,
   sendOTP,
-} = require('../controllers/auth-controller');
+} = require('../controllers/auth-controller').default;
 const {
   uploadimage,
   upload,

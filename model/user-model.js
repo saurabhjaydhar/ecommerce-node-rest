@@ -1,15 +1,13 @@
-const mongoose = require('mongoose');
-const addressSchema = require('./address-model');
+const mongoose = require("mongoose");
+const addressSchema = require("./address-model");
+
 
 const userSchema = new mongoose.Schema({
   token: {
     type: String,
     required: false,
   },
-  role: {
-    type: String,
-    required: true,
-  },
+ 
   name: {
     type: String,
     required: true,
@@ -27,13 +25,14 @@ const userSchema = new mongoose.Schema({
   displayPicture: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
-  // address: {
-  //   type: [addressSchema.schema],
-  //   required: false,
-  //   default: [addressSchema],
-  // },
+  role: {
+    type: String,
+    enum: ["customer", "admin", "seller"],
+    default: "customer",
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
@@ -42,6 +41,16 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // addresses: [addressSchema],
+  addresses: {
+    // type: [addressSchema.schema],
+
+    type: [addressSchema],
+    required: false,
+    default: [addressSchema],
+  },
+  
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
